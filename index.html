@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="stylesheet.css">
+    <title>Tonbale Web</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+</head>
+<body>
+    <h1>Tonbale - Web Edition</h1>
+    <p> Welcome to the world of tonbale</p>
+    <div class="game-window" >
+        <div class="sub-window">
+            <h3>Stats</h3>
+            <p id="stats-text-name"></p>
+            <p id="stats-text-hp"></p>
+            <p id="stats-text-atk"></p>
+            <p id="stats-text-def"></p>
+            <p id="stats-text-mgk"></p>
+            <p id="stats-text-gold"></p>
+        </div>
+        <div class="sub-window">
+            <h3>Inventory</h3>
+            <ul id="inv-list">
+                <li>apple</li>
+                <li>itemwithalongname</li>
+                <li>apple</li>
+                <li>apple</li>
+
+            </ul>
+        </div>
+        <div class="sub-window">
+            <h3>Map</h3>
+            <p id="map-text">00000000000</p>
+        </div>
+        <div class="sub-window-fill">
+            <p id="main-text">
+            </p>
+        </div>
+
+    </div>
+    <div class="menu">
+        <button class="button" onclick="Button(-1,0)">West</button>
+        <button class="button" onclick="Button(1,0)">East</button>
+        <button class="button" onclick="Button(0,-1)">North</button>
+        <button class="button" onclick="Button(0,1)">South</button>
+
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
