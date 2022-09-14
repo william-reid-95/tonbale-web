@@ -10,20 +10,22 @@ body{
 .game-window{
     border-style: groove;
     padding: 10px;
+    padding-bottom: 20px;
     border-radius: 10px;
     border-color: whitesmoke;
     display: flex;
     flex-direction: row;
-    height: 400px;
+    height: 525px;
     background-color: rgb(60, 60, 60);
 }
 .sub-window{
     border-style: double;
     padding-left: 10px;
-    padding-right: 10px;
+    padding-right: 10px;;
     border-radius: 5px;
     min-width: none;
     background-color:  rgb(45, 45, 45);
+    
 }
 .sub-window-fill{
     flex-grow: 1;
@@ -46,4 +48,7 @@ button{
     padding: 10px;
     margin: 10px;
 
+}
+#map-text{
+    font-size: x-large;
 }

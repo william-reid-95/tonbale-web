@@ -1,8 +1,5 @@
 //rpg web game 
 
-let tilePrefixes = ["dry","wet","cold","dark","sunny","windy"];
-let tileBiomeTypes = ["rocky","grassy","swampy","sandy"];
-let tileTerrainTypes = ["fields","jungle","hills","mountains","forest","crags","plains"]
 
 let firstNames = [
     "Tami",
@@ -101,13 +98,7 @@ function randomBool(){
     }
 }
 
-function createDescription(){
-    let prefix = tilePrefixes[randomInt(tilePrefixes.length)];
-    let biome = tileBiomeTypes[randomInt(tileBiomeTypes.length)];
-    let terrain = tileTerrainTypes[randomInt(tileTerrainTypes.length)];
 
-    return "the " + prefix + ", " + biome + " " + terrain
-}
 
 function createName(){
     let firstName = firstNames[randomInt(firstNames.length)];
@@ -122,6 +113,9 @@ function createTitle(){
 
     return titlePrefix + "-" + titleSuffix
 }
+
+
+//map stuff
 
 function SelectMapIcon(biomeType,biomePassable){
     if(biomeType == "water")
@@ -143,19 +137,38 @@ function SelectMapIcon(biomeType,biomePassable){
     }
     
 }
+
 class Biome{
-    constructor(_type,_name,_passable){
+    constructor(_type,_name,_iconChar){
         this.type = _type;
         this.name = _name;
-        this.passable = _passable;
-        this.iconChar = SelectMapIcon(this.type,this.passable);
+        this.iconChar = _iconChar;
     }
 }
+//low
+let plains = new Biome("normal","plains",'<span style="color:GoldenRod;">.</span>')
+let fields = new Biome("normal","fields",'<span style="color:GoldenRod;">,</span>')
+//low-mid
+let woods = new Biome("normal","woods",'<span style="color:forestgreen;">⏃</span>')
+let forest = new Biome("normal","forest",'<span style="color:forestgreen;">⍋</span>')
+//mid
+let hills = new Biome("normal","hills",'<span style="color:YellowGreen;">.</span>')
+let graveyard = new Biome("normal","graveyard",'<span style="color:Plum;">±</span>')
+let town = new Biome("normal","town",'<span style="color:peru;">⏏</span>')
+//high
+let mountains = new Biome("normal","mountains",'<span style="color:LightSlateGrey;">Δ</span>')
+let caves = new Biome("normal","caves",'<span style="color:LightSlateGrey;">Ω</span>')
 
-let forest = new Biome("land")
+let water = new Biome("impossible","water",'<span style="color:cadetblue;">≈</span>')
 
-function AssignBiome(){
+var tilePrefixes = ["dry","wet","cold","dark","sunny","windy"];
+var tileAdjectiveTypes = ["rocky","grassy","swampy","sandy"];
 
+function createDescription(biome){
+    let prefix = tilePrefixes[randomInt(tilePrefixes.length)];
+    let adjective = tileAdjectiveTypes[randomInt(tileAdjectiveTypes.length)];
+
+    return "the " + prefix + ", " + adjective + " " + biome
 }
 
 class Tile{
@@ -164,9 +177,8 @@ class Tile{
         this.y = _y;
         this.z = _z; //height (relative to sea level of tile) 
         this.passable;
-        //this.biome = assignBiome();
-        //this.iconChar = SelectMapIcon(this.passable);
-        this.description = createDescription(this.biome);
+        this.biome;
+        this.description;
         this.eventSelect = randomInt(3)
         if(this.eventSelect == 0){
             this.event = this.EventEnemy;
@@ -177,11 +189,57 @@ class Tile{
     }
     CheckPassable(){
         if(this.z == 0){
-            passable = false;
+            this.passable = false;
         }
         else{
-            passable = true;
+            this.passable = true;
         }
+    }
+    AssignBiome(){
+        if(this.z == 0){
+            this.biome = water;
+        }
+        else if(this.z == 1){
+            let biomeNumber = randomInt(7)
+            if(biomeNumber == 1){
+                this.biome = fields;
+            }
+            else{
+                this.biome = plains;
+            }
+        }
+        else if(this.z == 2){
+            let biomeNumber = randomInt(7)
+            if(biomeNumber == 1){
+                this.biome = forest;
+            }
+            else{
+                this.biome = woods;
+            }
+        }
+        else if(this.z == 3){
+            let biomeNumber = randomInt(13)
+            if(biomeNumber == 1){
+                this.biome = graveyard;
+            }
+            else if(biomeNumber == 2){
+                this.biome = town;
+            }
+            else{
+                this.biome = hills;
+            }
+        }
+        else{
+            let biomeNumber = randomInt(10)
+            if(biomeNumber == 1){
+                this.biome = caves;
+            }
+            else{
+                this.biome = mountains;
+            }
+        }
+
+        this.description = createDescription(this.biome.name);
     }
     
     EventEnemy(){
@@ -202,9 +260,9 @@ class Item{
 
 class Character{
     constructor () {
-        this.name = createName;
+        this.name = createName();
         if(randomBool()){
-            this.title = createTitle;
+            this.title = createTitle();
         }
     }
 }
@@ -230,7 +288,6 @@ class Player{
 let player = new Player("Bill")
 
 player.inventory.push(new Item("apple",5))
-
 
 var mapSize = 20;
 var yPos = 5;
@@ -290,6 +347,12 @@ function WorldGen(){
     SmoothMap()
     SmoothMap()
     SmoothMap()
+
+    map.forEach(element => {
+        element.CheckPassable()
+        element.AssignBiome()
+    });
+
     //start game
     GameTick()
 }
@@ -300,7 +363,6 @@ function GameTick(){
     for(let i = 0; i < map.length; i++ ){
         if (i % mapSize == 0){
             mapString += "<br>"
-            console.log("new line")
         }
         //console.log(map[i].x,map[i].y,map[i].description)
         if(map[i].x == xPos && map[i].y == yPos){
@@ -309,11 +371,10 @@ function GameTick(){
                 location.event()
             }
             console.log(xPos,yPos,location.z)
-            mapString += "#";
+            mapString += '<span style="color:tomato;">●</span>';
         }
         else{
-            mapString += map[i].z;
-            //mapString += map[i].iconChar;
+            mapString += map[i].biome.iconChar;
         }
         
     }
