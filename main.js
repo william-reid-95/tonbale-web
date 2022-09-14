@@ -117,26 +117,6 @@ function createTitle(){
 
 //map stuff
 
-function SelectMapIcon(biomeType,biomePassable){
-    if(biomeType == "water")
-    {
-        if(biomePassable == false){
-            return "≈"
-        }
-        else{
-            return "~" //TODO add other ground icons
-        }
-    }
-    else{
-        if(biomePassable == false){
-            return "Δ"
-        }
-        else{
-            return "." //TODO add other ground icons
-        }
-    }
-    
-}
 
 class Biome{
     constructor(_type,_name,_iconChar){
@@ -155,12 +135,15 @@ let forest = new Biome("normal","forest",'<span style="color:forestgreen;">⍋</
 let hills = new Biome("normal","hills",'<span style="color:YellowGreen;">.</span>')
 let graveyard = new Biome("normal","graveyard",'<span style="color:Plum;">±</span>')
 let town = new Biome("normal","town",'<span style="color:peru;">⏏</span>')
+let castle = new Biome("normal","castle",'<span style="color:peru;">♜</span>')
+
 //high
 let mountains = new Biome("normal","mountains",'<span style="color:LightSlateGrey;">Δ</span>')
 let caves = new Biome("normal","caves",'<span style="color:LightSlateGrey;">Ω</span>')
 
-let water = new Biome("impossible","water",'<span style="color:cadetblue;">≈</span>')
+let water = new Biome("impossible","water",'<span style="color:cadetblue;"><b>≈</b></span>')
 
+//location descriptions
 var tilePrefixes = ["dry","wet","cold","dark","sunny","windy"];
 var tileAdjectiveTypes = ["rocky","grassy","swampy","sandy"];
 
@@ -224,6 +207,9 @@ class Tile{
             }
             else if(biomeNumber == 2){
                 this.biome = town;
+            }
+            else if(biomeNumber == 3){
+                this.biome = castle;
             }
             else{
                 this.biome = hills;
@@ -378,6 +364,8 @@ function GameTick(){
         }
         
     }
+
+    //TODO: check if tiles around the player are passable and grey out movement buttons
 
     //show text in html doc
     document.getElementById("map-text").innerHTML = mapString;
