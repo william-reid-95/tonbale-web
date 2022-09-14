@@ -8,7 +8,7 @@
     <title>Tonbale Web</title>
     <link rel="icon" type="image/png" href="images/favicon.png">
 </head>
-<body>
+<body onload="WorldGen()">
     <h1>Tonbale - Web Edition</h1>
     <p> Welcome to the world of tonbale</p>
     <div class="game-window" >
@@ -42,10 +42,10 @@
 
     </div>
     <div class="menu">
-        <button class="button" onclick="Button(-1,0)">West</button>
-        <button class="button" onclick="Button(1,0)">East</button>
-        <button class="button" onclick="Button(0,-1)">North</button>
-        <button class="button" onclick="Button(0,1)">South</button>
+        <button class="button" onclick="Button(0,-1)">West</button>
+        <button class="button" onclick="Button(0,1)">East</button>
+        <button class="button" onclick="Button(-1,0)">North</button>
+        <button class="button" onclick="Button(1,0)">South</button>
 
     </div>
     <script src="main.js"></script>

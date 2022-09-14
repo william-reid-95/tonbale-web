@@ -123,13 +123,50 @@ function createTitle(){
     return titlePrefix + "-" + titleSuffix
 }
 
+function SelectMapIcon(biomeType,biomePassable){
+    if(biomeType == "water")
+    {
+        if(biomePassable == false){
+            return "≈"
+        }
+        else{
+            return "~" //TODO add other ground icons
+        }
+    }
+    else{
+        if(biomePassable == false){
+            return "Δ"
+        }
+        else{
+            return "." //TODO add other ground icons
+        }
+    }
+    
+}
+class Biome{
+    constructor(_type,_name,_passable){
+        this.type = _type;
+        this.name = _name;
+        this.passable = _passable;
+        this.iconChar = SelectMapIcon(this.type,this.passable);
+    }
+}
+
+let forest = new Biome("land")
+
+function AssignBiome(){
+
+}
+
 class Tile{
-    constructor(_x,_y,){
+    constructor(_x,_y,_z){
         this.x = _x;
         this.y = _y;
-        this.passable = randomBool();
-        this.icon = this.SelectMapIcon();
-        this.description = createDescription();
+        this.z = _z; //height (relative to sea level of tile) 
+        this.passable;
+        //this.biome = assignBiome();
+        //this.iconChar = SelectMapIcon(this.passable);
+        this.description = createDescription(this.biome);
         this.eventSelect = randomInt(3)
         if(this.eventSelect == 0){
             this.event = this.EventEnemy;
@@ -138,14 +175,15 @@ class Tile{
             this.event = this.EventTreasure;
         }
     }
-    SelectMapIcon(){
-        if(this.passable == false){
-            this.icon = "#"
+    CheckPassable(){
+        if(this.z == 0){
+            passable = false;
         }
         else{
-            this.icon = "." //TODO add other ground icons
+            passable = true;
         }
     }
+    
     EventEnemy(){
         this.character = new Character();
         console.log("enemy event triggered")
@@ -188,46 +226,100 @@ class Player{
     }
 }
 
-
 //init game
-
-let mapSize = 10;
-var yPos = 5;
-var xPos = 5;
-
-
-const map = [];
-
-for( let x = 1; x <= mapSize; x++ ){
-    for( let y = 1; y <= mapSize; y++ ){
-        let newTile = new Tile(x,y)
-        map.push(newTile)
-       
-    }
-}
-
 let player = new Player("Bill")
 
 player.inventory.push(new Item("apple",5))
 
+
+var mapSize = 20;
+var yPos = 5;
+var xPos = 5;
+var map = [];
+
+function SmoothMap(){
+    for(let i = 0; i < map.length; i++ ){
+        //get tile
+        let tile = map[i];
+        if(!(tile.x == 1 || tile.x == mapSize || tile.y == 1 || tile.y == mapSize)){
+            let neighbourTotal = 0;
+            for(let j = 0; j < map.length; j++ ){
+                //get n tile
+                let neighbourTile = map[j];
+                if((neighbourTile.x == tile.x -1 || neighbourTile.x == tile.x +1) && (neighbourTile.y == tile.y -1 || neighbourTile.y == tile.y +1)){
+                    neighbourTotal += neighbourTile.z
+                }
+                if(neighbourTotal != 0){
+                    if(neighbourTotal / 4 > tile.z){
+                        tile.z += 1;
+                        if(tile.z >= 9){
+                            tile.z = 9;
+                        }
+                    }
+                    else{
+                        tile.z -= 1;
+                        if(tile.z <= 0){
+                            tile.z = 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+function WorldGen(){
+    //creates all tiles
+    for(let x = 1; x <= mapSize; x++ ){
+        for(let y = 1; y <= mapSize; y++ ){
+            let newTile = new Tile(x,y,randomInt(9))
+            map.push(newTile)
+           
+        }
+    }
+    //creates walls (tiles of height 0)
+    for(let i = 0; i < map.length; i++ ){
+        //get tile
+        let tile = map[i];
+        if(tile.x == 1 || tile.x == mapSize || tile.y == 1 || tile.y == mapSize)
+        {
+            tile.z = 0;
+        }
+    }
+    //smooth map
+    SmoothMap()
+    SmoothMap()
+    SmoothMap()
+    //start game
+    GameTick()
+}
+
 function GameTick(){
     let mapString = "";
     let location = null;
-    for(let i = 1; i <= map.length-1; i++ ){
+    for(let i = 0; i < map.length; i++ ){
+        if (i % mapSize == 0){
+            mapString += "<br>"
+            console.log("new line")
+        }
         //console.log(map[i].x,map[i].y,map[i].description)
         if(map[i].x == xPos && map[i].y == yPos){
             location = map[i];
             if(location.event){
                 location.event()
             }
-            console.log(xPos,yPos)
-            break
+            console.log(xPos,yPos,location.z)
+            mapString += "#";
         }
+        else{
+            mapString += map[i].z;
+            //mapString += map[i].iconChar;
+        }
+        
     }
-    
 
     //show text in html doc
-    document.getElementById("map-text").innerHTML = "you are in " + location.description;
+    document.getElementById("map-text").innerHTML = mapString;
     document.getElementById("main-text").innerHTML = "you are in " + location.description;
     document.getElementById("stats-text-name").innerHTML = player.name
     document.getElementById("stats-text-hp").innerHTML = "Hp: " + player.hp +"/"+player.maxHp;
