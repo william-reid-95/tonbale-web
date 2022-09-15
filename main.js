@@ -271,7 +271,7 @@ class Player{
 }
 
 //init game
-let player = new Player("Bill")
+let player = new Player("The Hero")
 
 player.inventory.push(new Item("apple",5))
 
@@ -369,7 +369,7 @@ function GameTick(){
 
     //show text in html doc
     document.getElementById("map-text").innerHTML = mapString;
-    document.getElementById("main-text").innerHTML = "you are in " + location.description;
+    document.getElementById("main-text").innerHTML = "you are in " + location.description + ".";
     document.getElementById("stats-text-name").innerHTML = player.name
     document.getElementById("stats-text-hp").innerHTML = "Hp: " + player.hp +"/"+player.maxHp;
     document.getElementById("stats-text-atk").innerHTML = "Atk: " + player.atk
