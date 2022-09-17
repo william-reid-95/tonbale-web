@@ -1,14 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="stylesheet.css">
-    <title>Tonbale Web</title>
-    <link rel="icon" type="image/png" href="images/favicon.png">
-</head>
-<body onload="WorldGen()">
+{% extends 'layout.html' %}
+{% block content %}
     <h1>Tonbale - Web Edition</h1>
     <p> Welcome to the world of tonbale</p>
     <div class="game-window" >
@@ -41,15 +32,13 @@
             <p id="main-text">
             </p>
         </div>
-
     </div>
     <div class="menu">
+        <button class="button" onclick="WorldGen()">Generate World</button>
         <button class="button" onclick="Button(0,-1)">West</button>
         <button class="button" onclick="Button(0,1)">East</button>
         <button class="button" onclick="Button(-1,0)">North</button>
         <button class="button" onclick="Button(1,0)">South</button>
-
     </div>
-    <script src="main.js"></script>
-</body>
-</html>
+    <script src="static/main.js"></script>
+{% endblock content %}

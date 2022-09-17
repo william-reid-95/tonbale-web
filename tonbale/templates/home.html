@@ -1,0 +1,12 @@
+{% extends "layout.html"%}
+{% block content%}
+    <h1>Home Page</h1>
+    {% if current_user.is_authenticated%}
+        <p>hello, {{current_user.username}} </p>
+        <p> click <a href="{{url_for('game')}}">here</a> to play.</p>
+        <p> click <a href="{{url_for('logout')}}">here</a> to logout.</p>
+        <p> click <a href="{{url_for('account')}}">here</a> to manage your account.</p>
+    {% else %}
+        <p> Welcome, please <a href="{{ url_for('login')}}">login</a> or <a href="{{ url_for('register')}}">sign up</a>.</p>
+    {% endif%}
+{% endblock content%}
