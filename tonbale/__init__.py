@@ -13,4 +13,7 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login' #the function name (route) of the page to navigate to, if a user is not logged in and lands on a page that requires login.
 #login_manager.login_message_category = 'info' # set the category (css) of the info flash message
 
-from tonbale import routes #done after creating app object to avoid circular importing
+
+#routes must be imported into __init__ otherwise pages cannot be accesed
+#done after creating app object to avoid circular importing (as routes imports the app object)
+from tonbale import routes
